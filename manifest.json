@@ -5,7 +5,8 @@
   "version": "1.0",
   "permissions": [
     "notifications",
-    "storage"
+    "storage",
+    "offscreen"
   ],
   "background": {
     "service_worker": "background.js"

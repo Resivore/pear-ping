@@ -2,7 +2,13 @@ const toggleBtn = document.getElementById("toggle-btn");
 const stateText = document.getElementById("state-text");
 
 // helper storage functions with localStorage fallback
-const storageLocal = chrome?.storage?.local;
+// robustly access chrome.storage.local if available
+const storageLocal =
+  typeof chrome !== "undefined" &&
+  chrome.storage &&
+  chrome.storage.local
+    ? chrome.storage.local
+    : null;
 
 function getState(cb) {
   if (storageLocal) {
@@ -40,13 +46,20 @@ toggleBtn.addEventListener("click", () => {
 });
 
 // Play sound if message received AND active
-chrome?.runtime?.onMessage.addListener((request) => {
-  if (request.ping) {
-    getState((isActive) => {
-      if (isActive) {
-        const audio = document.getElementById("ping-audio");
-        if (audio) audio.play().catch((e) => console.error("Audio error:", e));
-      }
-    });
-  }
-});
+if (
+  typeof chrome !== "undefined" &&
+  chrome.runtime &&
+  chrome.runtime.onMessage
+) {
+  chrome.runtime.onMessage.addListener((request) => {
+    if (request.ping) {
+      getState((isActive) => {
+        if (isActive) {
+          const audio = document.getElementById("ping-audio");
+          if (audio)
+            audio.play().catch((e) => console.error("Audio error:", e));
+        }
+      });
+    }
+  });
+}

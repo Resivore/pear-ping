@@ -1,6 +1,8 @@
 const toggleInput = document.getElementById("toggle-input");
 const stateText = document.getElementById("state-text");
 const volumeSlider = document.getElementById("volume-slider");
+const adjustVolumeBtn = document.getElementById("adjust-volume-btn");
+const saveVolumeBtn = document.getElementById("save-volume-btn");
 const pingAudio = document.getElementById("ping-audio");
 
 // helper storage functions with localStorage fallback
@@ -74,8 +76,25 @@ toggleInput.addEventListener("change", () => {
 volumeSlider.addEventListener("input", () => {
   const vol = volumeSlider.value / 100;
   if (pingAudio) pingAudio.volume = vol;
-  setVolume(vol);
 });
+
+if (adjustVolumeBtn && saveVolumeBtn) {
+  adjustVolumeBtn.addEventListener("click", () => {
+    volumeSlider.style.display = "block";
+    saveVolumeBtn.style.display = "block";
+    adjustVolumeBtn.style.display = "none";
+  });
+
+  saveVolumeBtn.addEventListener("click", () => {
+    const vol = volumeSlider.value / 100;
+    if (pingAudio) pingAudio.volume = vol;
+    setVolume(vol, () => {
+      volumeSlider.style.display = "none";
+      saveVolumeBtn.style.display = "none";
+      adjustVolumeBtn.style.display = "block";
+    });
+  });
+}
 
 // Play sound if message received AND active
 if (

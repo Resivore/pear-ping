@@ -3,7 +3,10 @@
   "name": "15-Minute Real-Time Pinger",
   "description": "Pings with sound every 15 minutes at offset times.",
   "version": "1.0",
-  "permissions": ["notifications"],
+  "permissions": [
+    "notifications",
+    "storage"
+  ],
   "background": {
     "service_worker": "background.js"
   },

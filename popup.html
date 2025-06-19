@@ -62,19 +62,7 @@
       input:checked + .slider:before {
         transform: translateX(20px);
       }
-      #volume-slider {
-        width: 100px;
-        margin-top: 10px;
-      }
-      #adjust-volume-btn, #save-volume-btn {
-        margin-top: 10px;
-        background: #565b4d;
-        color: #c7c7c7;
-        border: none;
-        padding: 4px 8px;
-        border-radius: 4px;
-        cursor: pointer;
-      }
+      
     </style>
   </head>
   <body>
@@ -83,9 +71,6 @@
       <input type="checkbox" id="toggle-input" />
       <span class="slider"></span>
     </label>
-    <button id="adjust-volume-btn">Adjust Volume</button>
-    <input type="range" id="volume-slider" min="0" max="100" style="display:none;" />
-    <button id="save-volume-btn" style="display:none;">Save Volume</button>
     <audio id="ping-audio" src="ping.mp3" preload="auto"></audio>
     <script src="popup.js"></script>
   </body>

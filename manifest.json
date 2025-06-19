@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "15-Minute Real-Time Pinger",
+  "name": "Pear Ping",
   "description": "Pings with sound every 15 minutes at offset times.",
   "version": "1.0",
   "permissions": [

@@ -1,1 +1,1 @@
-# pear-ping
+# Pear Ping

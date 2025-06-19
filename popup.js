@@ -1,4 +1,4 @@
-const toggleBtn = document.getElementById("toggle-btn");
+const toggleInput = document.getElementById("toggle-input");
 const stateText = document.getElementById("state-text");
 
 // helper storage functions with localStorage fallback
@@ -33,15 +33,14 @@ function setState(active, cb) {
 // Load state from storage
 getState((isActive) => {
   stateText.textContent = isActive ? "Active" : "Paused";
+  if (toggleInput) toggleInput.checked = isActive;
 });
 
 // Toggle state on click
-toggleBtn.addEventListener("click", () => {
-  getState((curr) => {
-    const next = !curr;
-    setState(next, () => {
-      stateText.textContent = next ? "Active" : "Paused";
-    });
+toggleInput.addEventListener("change", () => {
+  const next = toggleInput.checked;
+  setState(next, () => {
+    stateText.textContent = next ? "Active" : "Paused";
   });
 });
 

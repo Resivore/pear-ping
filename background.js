@@ -44,8 +44,8 @@ chrome.alarms?.onAlarm.addListener((alarm) => {
       chrome.notifications.create({
         type: 'basic',
         iconUrl: 'icon.png',
-        title: '15-Minute Ping',
-        message: 'Almost time! ⏰',
+        title: 'Pear Ping',
+        message: 'Grab your pears! 🍐',
       });
     }
   });

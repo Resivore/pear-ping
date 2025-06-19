@@ -12,26 +12,44 @@ async function ensureOffscreen() {
   }
 }
 
-function checkTime() {
+function getNextPingTime() {
   const now = new Date();
-  const mins = now.getMinutes();
-  const secs = now.getSeconds();
-
-  if (targetMinutes.includes(mins) && secs === 55) {
-    chrome.storage.local.get(["pingerActive"], async (result) => {
-      if (result.pingerActive ?? true) {
-        chrome.runtime.sendMessage({ ping: true });
-        await ensureOffscreen();
-        chrome.runtime.sendMessage({ playPing: true });
-        chrome.notifications.create({
-          type: "basic",
-          iconUrl: "icon.png",
-          title: "15-Minute Ping",
-          message: "Almost time! ⏰"
-        });
-      }
-    });
-  }
+  const candidates = targetMinutes.map((m) => {
+    const t = new Date(now);
+    t.setMinutes(m);
+    t.setSeconds(55);
+    t.setMilliseconds(0);
+    if (t <= now) t.setHours(t.getHours() + 1);
+    return t;
+  });
+  candidates.sort((a, b) => a - b);
+  return candidates[0];
 }
 
-setInterval(checkTime, 1000);
+  function scheduleNextPing() {
+  if (!chrome.alarms) return;
+  const next = getNextPingTime();
+  chrome.alarms.clear('pingAlarm', () => {
+    chrome.alarms.create('pingAlarm', { when: next.getTime() });
+  });
+}
+
+chrome.alarms?.onAlarm.addListener((alarm) => {
+  if (alarm.name !== 'pingAlarm') return;
+  chrome.storage.local.get(['pingerActive'], async (result) => {
+    if (result.pingerActive ?? true) {
+      chrome.runtime.sendMessage({ ping: true });
+      await ensureOffscreen();
+      chrome.runtime.sendMessage({ playPing: true });
+      chrome.notifications.create({
+        type: 'basic',
+        iconUrl: 'icon.png',
+        title: '15-Minute Ping',
+        message: 'Almost time! ⏰',
+      });
+    }
+  });
+  scheduleNextPing();
+});
+
+scheduleNextPing();

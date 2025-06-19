@@ -6,7 +6,8 @@
   "permissions": [
     "notifications",
     "storage",
-    "offscreen"
+    "offscreen",
+    "alarms"
   ],
   "background": {
     "service_worker": "background.js"

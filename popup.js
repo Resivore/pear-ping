@@ -1,27 +1,49 @@
 const toggleBtn = document.getElementById("toggle-btn");
 const stateText = document.getElementById("state-text");
 
+// helper storage functions with localStorage fallback
+const storageLocal = chrome?.storage?.local;
+
+function getState(cb) {
+  if (storageLocal) {
+    storageLocal.get(["pingerActive"], (res) => {
+      cb(res.pingerActive ?? true);
+    });
+  } else {
+    const val = localStorage.getItem("pingerActive");
+    cb(val === null ? true : val === "true");
+  }
+}
+
+function setState(active, cb) {
+  if (storageLocal) {
+    storageLocal.set({ pingerActive: active }, cb);
+  } else {
+    localStorage.setItem("pingerActive", active);
+    if (cb) cb();
+  }
+}
+
 // Load state from storage
-chrome.storage.local.get(["pingerActive"], (result) => {
-  const isActive = result.pingerActive ?? true;
+getState((isActive) => {
   stateText.textContent = isActive ? "Active" : "Paused";
 });
 
 // Toggle state on click
 toggleBtn.addEventListener("click", () => {
-  chrome.storage.local.get(["pingerActive"], (result) => {
-    const isActive = !(result.pingerActive ?? true);
-    chrome.storage.local.set({ pingerActive: isActive }, () => {
-      stateText.textContent = isActive ? "Active" : "Paused";
+  getState((curr) => {
+    const next = !curr;
+    setState(next, () => {
+      stateText.textContent = next ? "Active" : "Paused";
     });
   });
 });
 
 // Play sound if message received AND active
-chrome.runtime.onMessage.addListener((request) => {
+chrome?.runtime?.onMessage.addListener((request) => {
   if (request.ping) {
-    chrome.storage.local.get(["pingerActive"], (result) => {
-      if (result.pingerActive ?? true) {
+    getState((isActive) => {
+      if (isActive) {
         const audio = document.getElementById("ping-audio");
         if (audio) audio.play().catch((e) => console.error("Audio error:", e));
       }

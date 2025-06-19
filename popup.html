@@ -15,7 +15,7 @@
         justify-content: center;
         align-items: center;
         width: 120px;
-        background: #6c6b6b;
+        background: #282828;
         color: #c7c7c7;
         letter-spacing: .5px;
       }
@@ -62,6 +62,10 @@
       input:checked + .slider:before {
         transform: translateX(20px);
       }
+      #volume-slider {
+        width: 100px;
+        margin-top: 10px;
+      }
     </style>
   </head>
   <body>
@@ -70,6 +74,7 @@
       <input type="checkbox" id="toggle-input" />
       <span class="slider"></span>
     </label>
+    <input type="range" id="volume-slider" min="0" max="100" />
     <audio id="ping-audio" src="ping.mp3" preload="auto"></audio>
     <script src="popup.js"></script>
   </body>

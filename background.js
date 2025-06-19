@@ -41,12 +41,12 @@ chrome.alarms?.onAlarm.addListener((alarm) => {
       chrome.runtime.sendMessage({ ping: true });
       await ensureOffscreen();
       chrome.runtime.sendMessage({ playPing: true });
-      chrome.notifications.create({
+      /* chrome.notifications.create({
         type: 'basic',
         iconUrl: 'icon.png',
         title: 'Pear Ping',
         message: 'Grab your pears! 🍐',
-      });
+      }); */
     }
   });
   scheduleNextPing();

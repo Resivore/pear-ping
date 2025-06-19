@@ -1,5 +1,7 @@
 const toggleInput = document.getElementById("toggle-input");
 const stateText = document.getElementById("state-text");
+const volumeSlider = document.getElementById("volume-slider");
+const pingAudio = document.getElementById("ping-audio");
 
 // helper storage functions with localStorage fallback
 // robustly access chrome.storage.local if available
@@ -30,10 +32,35 @@ function setState(active, cb) {
   }
 }
 
+function getVolume(cb) {
+  if (storageLocal) {
+    storageLocal.get(["pingVolume"], (res) => {
+      cb(res.pingVolume ?? 1);
+    });
+  } else {
+    const val = localStorage.getItem("pingVolume");
+    cb(val === null ? 1 : parseFloat(val));
+  }
+}
+
+function setVolume(vol, cb) {
+  if (storageLocal) {
+    storageLocal.set({ pingVolume: vol }, cb);
+  } else {
+    localStorage.setItem("pingVolume", vol);
+    if (cb) cb();
+  }
+}
+
 // Load state from storage
 getState((isActive) => {
   stateText.textContent = isActive ? "Active" : "Paused";
   if (toggleInput) toggleInput.checked = isActive;
+});
+
+getVolume((vol) => {
+  if (volumeSlider) volumeSlider.value = Math.round(vol * 100);
+  if (pingAudio) pingAudio.volume = vol;
 });
 
 // Toggle state on click
@@ -42,6 +69,12 @@ toggleInput.addEventListener("change", () => {
   setState(next, () => {
     stateText.textContent = next ? "Active" : "Paused";
   });
+});
+
+volumeSlider.addEventListener("input", () => {
+  const vol = volumeSlider.value / 100;
+  if (pingAudio) pingAudio.volume = vol;
+  setVolume(vol);
 });
 
 // Play sound if message received AND active
@@ -54,9 +87,8 @@ if (
     if (request.ping) {
       getState((isActive) => {
         if (isActive) {
-          const audio = document.getElementById("ping-audio");
-          if (audio)
-            audio.play().catch((e) => console.error("Audio error:", e));
+          if (pingAudio)
+            pingAudio.play().catch((e) => console.error("Audio error:", e));
         }
       });
     }

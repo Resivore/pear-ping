@@ -4,7 +4,6 @@
   "description": "Pings with sound every 15 minutes at offset times.",
   "version": "1.0",
   "permissions": [
-    "notifications",
     "storage",
     "offscreen",
     "alarms"

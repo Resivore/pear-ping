@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "15-Minute Real-Time Pinger",
+  "description": "Pings with sound every 15 minutes at offset times.",
+  "version": "1.0",
+  "permissions": ["notifications"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["ping.mp3"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

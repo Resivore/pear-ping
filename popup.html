@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>15-Minute Pinger</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 10px;
+        width: 200px;
+      }
+      #status {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      button {
+        padding: 6px 12px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="status">Status: <span id="state-text">Loading...</span></div>
+    <button id="toggle-btn">Toggle</button>
+    <audio id="ping-audio" src="ping.mp3" preload="auto"></audio>
+    <script src="popup.js"></script>
+  </body>
+</html>
